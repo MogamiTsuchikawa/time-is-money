@@ -36,13 +36,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
+  moneyPerHour  Int        @default(1000)
   accounts      Account[]
   sessions      Session[]
+  workSpans     WorkSpan[]
 }
 
 model VerificationToken {
@@ -51,4 +53,12 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model WorkSpan {
+  id      String    @id @default(cuid())
+  userId  String
+  startAt DateTime
+  endAt   DateTime?
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
